@@ -9,6 +9,9 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "classpath:scenario/petclinic/model/Person.feature"
+        features = {
+                "classpath:scenario/petclinic/model/Person.feature",
+                "classpath:scenario/petclinic/model/Person_fr.feature"
+        }
 )
 public class PersonValidatorTest {}
