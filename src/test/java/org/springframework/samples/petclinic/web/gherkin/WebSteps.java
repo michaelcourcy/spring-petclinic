@@ -2,11 +2,7 @@ package org.springframework.samples.petclinic.web.gherkin;
 
 
 //TODO convert it to assertJ
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.hamcrest.core.StringContains.containsString;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -18,7 +14,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.samples.petclinic.web.gherkin.seleniumutil.BrowserDriver;
 import org.springframework.samples.petclinic.web.gherkin.seleniumutil.FormField;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,18 +41,8 @@ public class WebSteps {
     @Then("^I should find the image '(.+)'$")
     public void then_I_login(String image){
         LOGGER.info("Looking for the image " + image);
-
-        //The XPATH way but the error message is not useful
-        //List<WebElement> webElements = BrowserDriver.getCurrentDriver().findElements(By.xpath("//img[contains(@src,'"+image+"')]"));
-        //assertThat(webElements.size(),greaterThan(0));
-
-        //hamcrest normal code
         List<WebElement> webElements = BrowserDriver.getCurrentDriver().findElements(By.tagName("img"));
-        List<String> attributes = new ArrayList<String>();
-        for (WebElement webElement : webElements){
-           attributes.add(webElement.getAttribute("src"));
-        }
-        assertThat(attributes,hasItem(containsString(image)));
+        assertThat(webElements).extracting("src").as("impossible to find %s", image).contains(image);
     }
 
 
@@ -66,7 +51,7 @@ public class WebSteps {
         LOGGER.info("Filling the form " + formName + " with " + formFields);
         //first check the form exist
         List<WebElement> webElements = BrowserDriver.getCurrentDriver().findElements(By.xpath("//form[@id='"+formName+"']"));
-        assertThat("The form " + formName + " can not be found in this page", webElements.size(), greaterThan(0));
+        assertThat(webElements.size()).as("The form %s can not be found in this page",formName).isGreaterThan(0);
         if (webElements.size()>1){
             LOGGER.warn("More than one form with id " + formName + " Behaviour may be unpredictable ");
         }
@@ -74,7 +59,7 @@ public class WebSteps {
         //then for each checks it's existence and fill the form
         for (FormField formField : formFields){
             List<WebElement> inputElements = currentFormElement.findElements(By.xpath("//input[@name='"+formField.getField()+"'] | //select[@name='"+formField.getField()+"']"));
-            assertThat("The element '" + formField.getField() + "' can not be found in form '" + formName +"'", inputElements.size(), greaterThan(0));
+            assertThat(inputElements.size()).as("The element %s can not be found in form %s",formField.getField(),formName).isGreaterThan(0);
             //TODO We always suppose that there is only one possible element with this name but that's not necessary true, we're waiting for a case
             WebElement inputElement = inputElements.get(0);
             if (inputElement.getTagName()=="select"){
@@ -91,7 +76,7 @@ public class WebSteps {
     @When("^I submit$")
     public void iSubmit() throws Throwable {
         List<WebElement> submitButtonElements = currentFormElement.findElements(By.xpath("//button[@type='submit']"));
-        assertThat("The form does not have a button submit", submitButtonElements.size(), greaterThan(0));
+        assertThat(submitButtonElements.size()).as("The form does not have a button submit").isGreaterThan(0);
         submitButtonElements.get(0).click();
     }
 
@@ -101,27 +86,27 @@ public class WebSteps {
         LOGGER.info("Searching for " + textInTheDataTable + " in the data table");
         //first get the data table
         List<WebElement> dataTableElements = BrowserDriver.getCurrentDriver().findElements(By.cssSelector(".dataTable"));
-        assertThat("Impossible to find a dataTable in the page", dataTableElements.size(), greaterThan(0));
+        assertThat(dataTableElements.size()).as("Impossible to find a dataTable in the page").isGreaterThan(0);
         //if there's more than elements we should warn
         if (dataTableElements.size()>1){
             LOGGER.warn("More than one dataTable in the page, make sure that's on purpose ");
         }
         List<WebElement> elementsWithTheText = dataTableElements.get(0).findElements(By.xpath("//*[contains(text(), '"+textInTheDataTable+"')]"));
-        assertThat("Impossible to find the text " + textInTheDataTable + " in the dataTable", elementsWithTheText.size(), greaterThan(0));
+        assertThat(elementsWithTheText.size()).as("Impossible to find the text %s in the dataTable",textInTheDataTable).isGreaterThan(0);
     }
 
     @Then("^I should find no data table$")
     public void iShouldFindNoDataTable() throws Throwable {
         LOGGER.info("Checking no data table are present");
         List<WebElement> dataTableElements = BrowserDriver.getCurrentDriver().findElements(By.cssSelector(".dataTable"));
-        assertThat("We should no find a dataTable", dataTableElements.size(), equalTo(0));
+        assertThat(dataTableElements.size()).as("We should not find a dataTable").isEqualTo(0);
     }
 
     @Then("^I should find '(.*)' in the page$")
     public void iShouldFindInthePage(String text) throws Throwable {
         LOGGER.info("Searching for " + text + " in the page");
         List<WebElement> elementsWithTheText = BrowserDriver.getCurrentDriver().findElements(By.xpath("//*[contains(text(), '"+text+"')]"));
-        assertThat("Impossible to find the text " + text + " in the page", elementsWithTheText.size(), greaterThan(0));
+        assertThat(elementsWithTheText.size()).as("Impossible to find the text %s in the page", text ).isGreaterThan(0);
     }
 
     @Then("^I should find the error message '(.*)'$")
@@ -129,14 +114,14 @@ public class WebSteps {
         LOGGER.info("Searching for the error message " + errorMessage);
         //first get the data table
         List<WebElement> errorElements = BrowserDriver.getCurrentDriver().findElements(By.xpath("//span[contains(@class,'help-inline') and contains(text(), '"+errorMessage+"')]"));
-        assertThat("Impossible to find error message " + errorMessage, errorElements.size(), greaterThan(0));
+        assertThat(errorElements.size()).as("Impossible to find error message %s", errorMessage).isGreaterThan(0);
     }
 
     @Given("^I click (.*)$")
     public void iClickThisButton(String buttonText) throws Throwable {
         LOGGER.info("Search the link btn " + buttonText);
         List<WebElement> buttonElements = BrowserDriver.getCurrentDriver().findElements(By.xpath("//a[contains(@class,'btn') and contains(text(), '"+buttonText+"')]"));
-        assertThat("Impossible to find the button " + buttonText, buttonElements.size(), greaterThan(0));
+        assertThat(buttonElements.size()).as("Impossible to find the button %s" , buttonText).isGreaterThan(0);
         if (buttonElements.size()>1){
             LOGGER.warn("More than one button " + buttonText +" make sure that's on purpose ");
         }

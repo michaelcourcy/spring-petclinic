@@ -85,7 +85,7 @@ public class PersonValidatorStep {
     }
 
     @Alors("^on devrait avoir le message d'erreur sur '(.*)' qui dit '(.*)'$")
-    @Then("^we should have a  error message on '(.*)' that says '(.*)'$")
+    @Then("^we should have an error message on '(.*)' that says '(.*)'$")
     public void weShouldHaveAnErrorMessage(String propertyWithMessage, String message){
         ConstraintViolation<Person> violation = constraintViolations.iterator().next();
         assertThat(violation.getPropertyPath().toString()).isEqualTo(propertyWithMessage);

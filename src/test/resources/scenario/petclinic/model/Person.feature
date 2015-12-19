@@ -9,7 +9,7 @@ Feature: Test the validation on the person object
     And we set lastName 'smith'
     When we apply validation
     Then we should have 1 violation
-    And we should have a  error message on 'firstName' that says 'may not be empty'
+    And we should have an error message on 'firstName' that says 'may not be empty'
 
 
   Scenario: Create a person with lastName empty and check we have a violation error message on it
@@ -18,4 +18,4 @@ Feature: Test the validation on the person object
     And we set lastName ''
     When we apply validation
     Then we should have 1 violation
-    And we should have a  error message on 'lastName' that says 'may not be empty'
+    And we should have an error message on 'lastName' that says 'may not be empty'
