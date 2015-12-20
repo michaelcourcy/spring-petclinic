@@ -8,6 +8,6 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "classpath:scenario/petclinic/webapp/petclinic_basic.feature"
 )
-public class PetclinicBasicTest {
+public class AddOwnerAndPetBrowserTests {
 
 }

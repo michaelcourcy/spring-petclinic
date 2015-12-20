@@ -14,4 +14,4 @@ import org.junit.runner.RunWith;
                 "classpath:scenario/petclinic/model/Person_fr.feature"
         }
 )
-public class PersonValidatorTest {}
+public class PersonValidatorTests {}
