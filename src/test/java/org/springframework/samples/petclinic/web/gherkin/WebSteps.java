@@ -4,10 +4,13 @@ package org.springframework.samples.petclinic.web.gherkin;
 //TODO convert it to assertJ
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.apache.log4j.Logger;
+import org.assertj.core.api.Condition;
+import org.assertj.core.api.iterable.Extractor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -39,10 +42,22 @@ public class WebSteps {
     }
 
     @Then("^I should find the image '(.+)'$")
-    public void then_I_login(String image){
+    public void then_I_login(final String image){
         LOGGER.info("Looking for the image " + image);
         List<WebElement> webElements = BrowserDriver.getCurrentDriver().findElements(By.tagName("img"));
-        assertThat(webElements).extracting("src").as("impossible to find %s", image).contains(image);
+        assertThat(webElements).extracting(new Extractor<WebElement, String>() {
+            @Override
+            public String extract(WebElement input) {
+                return input.getAttribute("src");
+            }
+        })
+            .as("impossible to find %s", image)
+            .areAtLeast(1, new
+            Condition<String>() {
+                @Override
+                public boolean matches(String value) {
+                    return value.contains(image);
+             }});
     }
 
 
