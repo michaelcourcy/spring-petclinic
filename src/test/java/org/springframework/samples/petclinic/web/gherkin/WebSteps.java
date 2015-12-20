@@ -8,7 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.iterable.Extractor;
 import org.openqa.selenium.By;
@@ -22,7 +23,7 @@ import java.util.List;
 
 
 public class WebSteps {
-    private static final Logger LOGGER = Logger.getLogger(WebSteps.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSteps.class.getName());
 
     /**
      * The current form involved in the steps
