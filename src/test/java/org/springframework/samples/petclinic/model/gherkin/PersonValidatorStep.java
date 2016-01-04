@@ -94,7 +94,7 @@ public class PersonValidatorStep {
 
     @Alors("^on devrait avoir (\\d+) violation$")
     @Then("^we should have (\\d+) violation$")
-    public void weShouldHaveAErrorMessageOnFirstNameThatSaysMayNotBeEmpty(Integer numberOfViolations) throws Throwable {
+    public void weShouldHaveNumberOfViolations(Integer numberOfViolations) throws Throwable {
         assertThat(constraintViolations.size()).isEqualTo(numberOfViolations);
     }
 }

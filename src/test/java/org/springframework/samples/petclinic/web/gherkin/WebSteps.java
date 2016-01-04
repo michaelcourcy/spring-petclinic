@@ -36,11 +36,6 @@ public class WebSteps {
         BrowserDriver.loadPage(url);
     }
 
-    @When("^I try to login with '(.+)' credentials$")
-    public void when_I_try_to_login(String credentialsType){
-        LOGGER.info("Entering: I try to login with " +
-                credentialsType + " credentials");
-    }
 
     @Then("^I should find the image '(.+)'$")
     public void then_I_login(final String image){
